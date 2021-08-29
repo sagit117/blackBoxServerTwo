@@ -16,6 +16,7 @@
   "author": "Pavel Aksenov <sagit117@gmail.com>",
   "private": false,
   "devDependencies": {
+    "@types/node": "^16.7.6",
     "prettier": "^2.3.2",
     "typescript": "^4.4.2"
   },

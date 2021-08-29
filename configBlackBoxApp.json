@@ -1,0 +1,19 @@
+{
+  "server": {
+    "port": 8080,
+    "headers": [
+      {
+        "key": "Access-Control-Allow-Origin",
+        "value": "*"
+      },
+      {
+        "key": "Access-Control-Allow-Origin",
+        "value": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+      },
+      {
+        "key": "Access-Control-Allow-Headers",
+        "value": "Content-Type"
+      }
+    ]
+  }
+}
