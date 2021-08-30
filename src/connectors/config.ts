@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import { BlackBoxApp } from '../../index';
 
 /**
@@ -9,10 +9,11 @@ export default class Config implements BlackBoxApp.Config {
 
     /**
      * Загрузка настроек из файла конфигурации
+     * @param path - путь к файлу настроек
      */
-    constructor(url: string) {
+    constructor(path: string) {
         try {
-            this.config = JSON.parse(fs.readFileSync(url, 'utf8'));
+            this.config = JSON.parse(fs.readFileSync(path, 'utf8'));
         } catch (e: any) {
             throw new Error(e);
         }
