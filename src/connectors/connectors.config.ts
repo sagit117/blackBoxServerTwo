@@ -12,6 +12,8 @@ export default class Config implements BlackBoxApp.Config {
      * @param path - путь к файлу настроек
      */
     constructor(path: string) {
+        if (!path) throw new Error('path cannot be undefined!');
+
         try {
             this.config = JSON.parse(fs.readFileSync(path, 'utf8'));
         } catch (e: any) {

@@ -12,5 +12,7 @@ export default function serverStart(
     cb: () => void,
     serverConfig: BlackBoxApp.IServerConfig
 ) {
-    server.listen(serverConfig.port, cb).on('error', () => {});
+    if (!server) throw new Error('server cannot be undefined!');
+
+    server.listen(serverConfig?.port || 8080, cb).on('error', () => {});
 }
