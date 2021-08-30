@@ -1,4 +1,5 @@
 import { Express } from "express";
+import ColoredLogger from "./src/connectors/connectors.coloredLogger";
 
 export namespace BlackBoxApp {
     export interface IConfigApp {
@@ -32,5 +33,11 @@ export namespace BlackBoxApp {
 
     export abstract class Config {
         getConfig<T>(): T;
+    }
+
+    export abstract class ColoredLogger {
+        logError(reason: string, msg: string): string;
+        logWarn(reason: string, msg: string): string;
+        logInfo(reason: string, msg: string): string;
     }
 }

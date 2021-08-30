@@ -4,13 +4,13 @@ import { BlackBoxApp } from "../../index";
 /**
  * Метод для запуска сервера
  * @param server        - http server
- * @param cb            - callback-функция
  * @param serverConfig  - конфиг для сервера
+ * @param cb            - callback-функция
  */
 export default function serverStart(
     server: http.Server,
-    cb: () => void,
-    serverConfig: BlackBoxApp.IServerConfig
+    serverConfig: BlackBoxApp.IServerConfig,
+    cb: () => void
 ) {
     if (!server) throw new Error("server cannot be undefined!");
 

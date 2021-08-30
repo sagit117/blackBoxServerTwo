@@ -4,7 +4,7 @@ import clc from "cli-color";
 /**
  * Класс для колорированного логирования
  */
-export default class ColoredLogger {
+export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
     private readonly errorMsg: clc.Format;
     private readonly warnMsg: clc.Format;
     private readonly infoMsg: clc.Format;
