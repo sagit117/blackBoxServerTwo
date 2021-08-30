@@ -1,8 +1,9 @@
-import { Express } from 'express';
+import { Express } from "express";
 
 export namespace BlackBoxApp {
     export interface IConfigApp {
         server: IServerConfig;
+        logger: ILoggerConfig;
     }
 
     export interface IServerConfig {
@@ -11,6 +12,17 @@ export namespace BlackBoxApp {
             key: string;
             value: string;
         }>;
+    }
+
+    export interface ILoggerConfig {
+        messages: ILoggerMessageType;
+    }
+
+    export interface ILoggerMessageType {
+        error?: string;
+        info?: string;
+        warning?: string;
+        dateTime?: string;
     }
 
     export interface ICreateApp {

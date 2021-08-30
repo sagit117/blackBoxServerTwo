@@ -1,5 +1,5 @@
-import http from 'http';
-import { BlackBoxApp } from '../../index';
+import http from "http";
+import { BlackBoxApp } from "../../index";
 
 /**
  * Метод для запуска сервера
@@ -12,7 +12,7 @@ export default function serverStart(
     cb: () => void,
     serverConfig: BlackBoxApp.IServerConfig
 ) {
-    if (!server) throw new Error('server cannot be undefined!');
+    if (!server) throw new Error("server cannot be undefined!");
 
-    server.listen(serverConfig?.port || 8080, cb).on('error', () => {});
+    server.listen(serverConfig?.port || 8080, cb).on("error", () => {});
 }

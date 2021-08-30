@@ -3,6 +3,7 @@ import Express from 'express';
 import serverStart from './connectors/connectors.server';
 import { BlackBoxApp } from '../index';
 import Config from './connectors/connectors.config';
+import Logger from './connectors/connectors.logger';
 
 /**
  * Функция для создания приложения BlackBox
@@ -43,4 +44,8 @@ function createServer(
     const server = http.createServer(app);
 
     serverStart(server, cbServerStart, serverConfig);
+}
+
+function createLogger(config: BlackBoxApp.ILoggerConfig): Logger {
+    return new Logger(config);
 }
