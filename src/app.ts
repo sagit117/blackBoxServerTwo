@@ -1,5 +1,7 @@
 import http from "http";
 import Express from "express";
+import Compression from "compression";
+import BodyParser from "body-parser";
 import serverStart from "./connectors/connectors.server";
 import { BlackBoxApp } from "../index";
 import Config from "./connectors/connectors.config";
@@ -47,9 +49,50 @@ export default function createApp(
     );
 
     /**
+     * middleware
+     */
+    const urlencodedParser = BodyParser.urlencoded({
+        limit: config?.server?.bodyParser?.limit || "50mb",
+        extended: !!config?.server?.bodyParser?.extended,
+        parameterLimit: config?.server?.bodyParser?.parameterLimit || 50000,
+    }); // чтение данных из форм
+    const jsonParser = BodyParser.json({
+        limit: config?.server?.bodyParser?.limit || "50mb",
+    }); // чтение данных из json
+
+    blackBoxApp.use(urlencodedParser);
+    blackBoxApp.use(jsonParser);
+
+    config.server.useCompression && blackBoxApp.use(Compression());
+
+    /**
      * Обработчики сигналов выхода
      */
     sigExitPrepare();
+
+    /**
+     * Обработчики неизвестных ошибок
+     */
+    process.on("uncaughtException", (error) => {
+        LogEmitter.emit(LogEmitterEvent.logError, "uncaughtException", error);
+        process.exit(1);
+    });
+
+    /**
+     * Обработчик ошибок в promises
+     */
+    process.on("unhandledRejection", (reason, _promise) => {
+        /**
+         * Обработка ошибок специальных исключений
+         */
+        // if (reason instanceof HttpInternalServerException) {
+        //     reason.response.send(reason.message)
+        // } else if (reason instanceof HttpValidationException) {
+        //     reason.response.send(reason.message)
+        // }
+
+        LogEmitter.emit(LogEmitterEvent.logError, "unhandledRejection", reason);
+    });
 
     return {
         blackBoxApp,

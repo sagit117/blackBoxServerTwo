@@ -14,7 +14,13 @@
                 "key": "Access-Control-Allow-Headers",
                 "value": "Content-Type"
             }
-        ]
+        ],
+        "useCompression": true,
+        "bodyParser": {
+            "limit": "50mb",
+            "extended": false,
+            "parameterLimit": 50000
+        }
     },
     "logger": {
         "messages": {

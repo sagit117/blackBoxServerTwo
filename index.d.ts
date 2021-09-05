@@ -12,6 +12,12 @@ export namespace BlackBoxApp {
             key: string;
             value: string;
         }>;
+        useCompression: boolean;
+        bodyParser: {
+            limit: string;
+            extended: boolean;
+            parameterLimit: number;
+        };
     }
 
     export interface ILoggerConfig {
