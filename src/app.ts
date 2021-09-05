@@ -46,6 +46,11 @@ export default function createApp(
         cbServerStart || cbServerStartDefault.bind(null, config)
     );
 
+    /**
+     * Обработчики сигналов выхода
+     */
+    sigExitPrepare();
+
     return {
         blackBoxApp,
         classConfig,
@@ -110,4 +115,23 @@ function activateLoggerEmitters(logger: ColoredLogger) {
             logger.logWarn(reason, error);
         }
     );
+}
+
+/**
+ * Обработчики сигналов выхода
+ */
+function sigExitPrepare() {
+    const exits = ["exit", "SIGTERM", "SIGINT", "SIGHUP", "SIGQUIT"];
+
+    exits.forEach((event) => {
+        process.on(event, (code: number) => {
+            LogEmitter.emit(
+                LogEmitterEvent.logWarn,
+                "EXIT",
+                `server остановлен по коду ${code}`
+            );
+
+            process.exit(0);
+        });
+    });
 }
