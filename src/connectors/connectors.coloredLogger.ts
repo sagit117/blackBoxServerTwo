@@ -11,17 +11,20 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
     private readonly dateMsg: clc.Format;
 
     constructor(config: BlackBoxApp.ILoggerConfig) {
+        // @ts-ignore
+        const color = clc;
+
         this.errorMsg = eval(
-            `clc.${config?.messages?.error || "red.bold"}`
+            `color.${config?.messages?.error || "red.bold"}`
         ) as clc.Format;
         this.warnMsg = eval(
-            `clc.${config?.messages?.warning || "yellow"}`
+            `color.${config?.messages?.warning || "yellow"}`
         ) as clc.Format;
         this.infoMsg = eval(
-            `clc.${config?.messages?.info || "blue"}`
+            `color.${config?.messages?.info || "blue"}`
         ) as clc.Format;
         this.dateMsg = eval(
-            `clc.${config?.messages?.dateTime || "bgBlack.bold.white"}`
+            `color.${config?.messages?.dateTime || "bgBlack.bold.white"}`
         ) as clc.Format;
     }
 
@@ -30,12 +33,16 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
      * @param reason    - причина сообщения
      * @param msg       - сообщение
      */
-    public logError(reason: string, msg: string): string {
-        return (
+    public logError(reason: string, msg: string = ""): string {
+        const logString =
             this.errorMsg(`[${reason}] `) +
             this.dateMsg(new Date().toLocaleDateString()) +
-            this.errorMsg(msg)
-        );
+            " " +
+            this.errorMsg(msg);
+
+        this.log(logString);
+
+        return logString;
     }
 
     /**
@@ -44,11 +51,15 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
      * @param msg       - сообщение
      */
     public logWarn(reason: string, msg: string): string {
-        return (
+        const logString =
             this.warnMsg(`[${reason}] `) +
             this.dateMsg(new Date().toLocaleDateString()) +
-            this.warnMsg(msg)
-        );
+            " " +
+            this.warnMsg(msg);
+
+        this.log(logString);
+
+        return logString;
     }
 
     /**
@@ -57,10 +68,23 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
      * @param msg       - сообщение
      */
     public logInfo(reason: string, msg: string): string {
-        return (
+        const logString =
             this.infoMsg(`[${reason}] `) +
             this.dateMsg(new Date().toLocaleDateString()) +
-            this.infoMsg(msg)
-        );
+            " " +
+            this.infoMsg(msg);
+
+        this.log(logString);
+
+        return logString;
+    }
+
+    /**
+     * Логирование
+     * @param str - строка лога
+     * @private
+     */
+    private log(str: String) {
+        console.log(str);
     }
 }

@@ -1,5 +1,4 @@
 import { Express } from "express";
-import ColoredLogger from "./src/connectors/connectors.coloredLogger";
 
 export namespace BlackBoxApp {
     export interface IConfigApp {

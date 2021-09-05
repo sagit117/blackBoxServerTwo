@@ -1,5 +1,7 @@
 import http from "http";
 import { BlackBoxApp } from "../../index";
+import LogEmitter from "../emitters/emitter.log";
+import { LogEmitterEvent } from "../app";
 
 /**
  * Метод для запуска сервера
@@ -14,5 +16,7 @@ export default function serverStart(
 ) {
     if (!server) throw new Error("server cannot be undefined!");
 
-    server.listen(serverConfig?.port || 8080, cb).on("error", () => {});
+    server.listen(serverConfig?.port || 8080, cb).on("error", (error) => {
+        LogEmitter.emit(LogEmitterEvent.logError, "SERVER", error);
+    });
 }

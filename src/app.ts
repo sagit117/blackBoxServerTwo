@@ -4,12 +4,26 @@ import serverStart from "./connectors/connectors.server";
 import { BlackBoxApp } from "../index";
 import Config from "./connectors/connectors.config";
 import ColoredLogger from "./connectors/connectors.coloredLogger";
+import LogEmitter from "./emitters/emitter.log";
+
+/**
+ * Типы событий для логирования
+ */
+export enum LogEmitterEvent {
+    logError = "logError",
+    logInfo = "logInfo",
+    logWarn = "logWarn",
+}
 
 /**
  * Функция для создания приложения BlackBox
- * @param configPath - путь к файлу настроек
+ * @param configPath    - путь к файлу настроек
+ * @param cbServerStart - callback-функция сработает после запуска сервера, если не задана, сработает функция по умолчанию
  */
-export default function createApp(configPath: string): BlackBoxApp.ICreateApp {
+export default function createApp(
+    configPath: string,
+    cbServerStart?: () => void
+): BlackBoxApp.ICreateApp {
     /**
      * Получаем настройки приложения
      */
@@ -20,21 +34,33 @@ export default function createApp(configPath: string): BlackBoxApp.ICreateApp {
      * Создаем логгер
      */
     const logger = new ColoredLogger(config.logger);
+    activateLoggerEmitters(logger);
 
     /**
      * Запускаем сервер
      */
     const blackBoxApp = Express();
-    createServer(blackBoxApp, config?.server, cbServerStart.bind(null, logger));
+    createServer(
+        blackBoxApp,
+        config?.server,
+        cbServerStart || cbServerStartDefault
+    );
+
+    /**
+     * callback-функция по умолчанию сработает после запуска сервера
+     */
+    function cbServerStartDefault() {
+        LogEmitter.emit(
+            LogEmitterEvent.logInfo,
+            "SERVER",
+            `START in port ${config?.server?.port || 8080}`
+        );
+    }
 
     return {
         blackBoxApp,
         classConfig,
     };
-}
-
-function cbServerStart(logger: ColoredLogger) {
-    console.log(logger.logInfo("SERVER", "START"));
 }
 
 /**
@@ -53,4 +79,34 @@ function createServer(
     const server = http.createServer(app);
 
     serverStart(server, serverConfig, cbServerStart);
+}
+
+/**
+ * Активация слушателей для логирования
+ * @param logger - класс логгер
+ */
+function activateLoggerEmitters(logger: ColoredLogger) {
+    LogEmitter.addListeners(
+        LogEmitterEvent.logError,
+        (reason: string, error: Error | string) => {
+            logger.logError(
+                reason,
+                error instanceof Error ? error.stack : error
+            );
+        }
+    );
+
+    LogEmitter.addListeners(
+        LogEmitterEvent.logInfo,
+        (reason: string, error: string) => {
+            logger.logInfo(reason, error);
+        }
+    );
+
+    LogEmitter.addListeners(
+        LogEmitterEvent.logWarn,
+        (reason: string, error: string) => {
+            logger.logWarn(reason, error);
+        }
+    );
 }
