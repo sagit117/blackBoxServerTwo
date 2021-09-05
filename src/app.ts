@@ -31,7 +31,7 @@ export default function createApp(
     const config = classConfig.getConfig<BlackBoxApp.IConfigApp>();
 
     /**
-     * Создаем логгер
+     * Создаем логгер и активируем слушателей
      */
     const logger = new ColoredLogger(config.logger);
     activateLoggerEmitters(logger);
@@ -43,19 +43,8 @@ export default function createApp(
     createServer(
         blackBoxApp,
         config?.server,
-        cbServerStart || cbServerStartDefault
+        cbServerStart || cbServerStartDefault.bind(null, config)
     );
-
-    /**
-     * callback-функция по умолчанию сработает после запуска сервера
-     */
-    function cbServerStartDefault() {
-        LogEmitter.emit(
-            LogEmitterEvent.logInfo,
-            "SERVER",
-            `START in port ${config?.server?.port || 8080}`
-        );
-    }
 
     return {
         blackBoxApp,
@@ -79,6 +68,18 @@ function createServer(
     const server = http.createServer(app);
 
     serverStart(server, serverConfig, cbServerStart);
+}
+
+/**
+ * callback-функция по умолчанию сработает после запуска сервера
+ * @param config - конфигурация
+ */
+function cbServerStartDefault(config: BlackBoxApp.IConfigApp) {
+    LogEmitter.emit(
+        LogEmitterEvent.logInfo,
+        "SERVER",
+        `START in port ${config?.server?.port || 8080}`
+    );
 }
 
 /**
