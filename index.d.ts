@@ -29,6 +29,7 @@ export namespace BlackBoxApp {
         info?: string;
         warning?: string;
         dateTime?: string;
+        text: string;
     }
 
     export interface ICreateApp {

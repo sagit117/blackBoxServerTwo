@@ -24,10 +24,11 @@
     },
     "logger": {
         "messages": {
-            "error": "red.bold",
-            "info": "blue",
-            "warning": "yellow",
-            "dateTime": "bgBlack.bold.white"
+            "error": "red.bold.bgWhiteBright",
+            "info": "blue.bold.bgWhiteBright",
+            "warning": "yellow.bold.bgWhiteBright",
+            "dateTime": "bgBlack.bold.whiteBright",
+            "text": "whiteBright"
         }
     }
 }

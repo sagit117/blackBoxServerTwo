@@ -9,22 +9,26 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
     private readonly warnMsg: clc.Format;
     private readonly infoMsg: clc.Format;
     private readonly dateMsg: clc.Format;
+    private readonly textMsg: clc.Format;
 
     constructor(config: BlackBoxApp.ILoggerConfig) {
         // @ts-ignore
         const color = clc;
 
         this.errorMsg = eval(
-            `color.${config?.messages?.error || "red.bold"}`
+            `color.${config?.messages?.error || "red.bold.bgWhite"}`
         ) as clc.Format;
         this.warnMsg = eval(
-            `color.${config?.messages?.warning || "yellow"}`
+            `color.${config?.messages?.warning || "yellow.bold.bgWhite"}`
         ) as clc.Format;
         this.infoMsg = eval(
-            `color.${config?.messages?.info || "blue"}`
+            `color.${config?.messages?.info || "blue.bold.bgWhite"}`
         ) as clc.Format;
         this.dateMsg = eval(
             `color.${config?.messages?.dateTime || "bgBlack.bold.white"}`
+        ) as clc.Format;
+        this.textMsg = eval(
+            `color.${config?.messages?.text || "whiteBright"}`
         ) as clc.Format;
     }
 
@@ -35,10 +39,13 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
      */
     public logError(reason: string, msg: string = ""): string {
         const logString =
-            this.errorMsg(`[${reason}] `) +
             this.dateMsg(new Date().toLocaleDateString()) +
             " " +
-            this.errorMsg(msg);
+            this.textMsg(`[${reason}] `) +
+            " " +
+            this.errorMsg(" CRITICAL ") +
+            " " +
+            this.textMsg(msg);
 
         this.log(logString);
 
@@ -52,10 +59,13 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
      */
     public logWarn(reason: string, msg: string): string {
         const logString =
-            this.warnMsg(`[${reason}] `) +
             this.dateMsg(new Date().toLocaleDateString()) +
             " " +
-            this.warnMsg(msg);
+            this.textMsg(`[${reason}] `) +
+            " " +
+            this.warnMsg(" WARNING ") +
+            " " +
+            this.textMsg(msg);
 
         this.log(logString);
 
@@ -69,10 +79,13 @@ export default class ColoredLogger implements BlackBoxApp.ColoredLogger {
      */
     public logInfo(reason: string, msg: string): string {
         const logString =
-            this.infoMsg(`[${reason}] `) +
             this.dateMsg(new Date().toLocaleDateString()) +
             " " +
-            this.infoMsg(msg);
+            this.textMsg(`[${reason}] `) +
+            " " +
+            this.infoMsg(" INFO ") +
+            " " +
+            this.textMsg(msg);
 
         this.log(logString);
 
